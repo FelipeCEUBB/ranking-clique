@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ranking</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 25px 30px;
+      background: #f5f7fa;
+      color: #222;
+      box-shadow: 0 4px 14px rgb(0 0 0 / 0.08);
+      border-radius: 12px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 25px;
+    }
+
+    #status {
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.1em;
+      color: #555;
+    }
+
+    nav {
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    nav button {
+      margin: 0 7px;
+      padding: 10px 18px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 7px;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+    }
+
+    nav button:hover {
+      background-color: #2c80c9;
+    }
+
+    #userEmail {
+      font-weight: 600;
+      margin-left: 12px;
+      color: #34495e;
+      font-size: 0.9rem;
+    }
+
+    #authForms input {
+      display: block;
+      margin: 10px 0;
+      padding: 10px 12px;
+      font-size: 1rem;
+      border: 1.8px solid #ccc;
+      border-radius: 8px;
+      transition: border-color 0.25s ease;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    #authForms input:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+
+    #authForms button {
+      background-color: #27ae60;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      padding: 12px 0;
+      width: 100%;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+      margin-top: 10px;
+    }
+
+    #authForms button:hover {
+      background-color: #1e8449;
+    }
+
+    #inputUserName {
+      margin-top: 22px;
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1.8px solid #ccc;
+      box-sizing: border-box;
+      transition: border-color 0.25s ease;
+    }
+
+    #inputUserName:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+
+    #clickButton {
+      margin-top: 15px;
+      padding: 14px 20px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #3498db, #2980b9);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgb(41 128 185 / 0.35);
+      transition: background 0.25s ease;
+      width: 100%;
+    }
+
+    #clickButton:disabled {
+      background: #95a5a6;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    #clickButton:hover:not(:disabled) {
+      background: linear-gradient(90deg, #2980b9, #2471a3);
+    }
+
+    h2 {
+      margin-top: 35px;
+      color: #34495e;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 8px;
+      font-weight: 700;
+    }
+
+    #rankingList {
+      margin-top: 18px;
+      padding-left: 20px;
+      color: #2c3e50;
+      font-size: 1rem;
+    }
+
+    #btnDeleteRanking {
+      margin-top: 25px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 14px 0;
+      width: 100%;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgb(231 76 60 / 0.5);
+      transition: background-color 0.25s ease;
+    }
+
+    #btnDeleteRanking:hover {
+      background-color: #c0392b;
+    }
+
+    #adminScheduleContainer {
+      margin-top: 25px;
+      padding: 15px;
+      border: 1px solid #3498db;
+      border-radius: 10px;
+      background-color: #ecf6fd;
+    }
+
+    #adminScheduleContainer label {
+      font-weight: 600;
+      color: #34495e;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    #adminSchedule {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.8px solid #3498db;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Seu conteúdo aqui -->
+  <h1>Ranking</h1>
+  <p id="status">Aguardando o horário certo...</p>
+
+  <nav>
+    <button id="btnShowLogin">Login</button>
+    <button id="btnShowRegister">Cadastro</button>
+    <button id="btnLogout" class="hidden">Logout</button>
+    <span id="userEmail"></span>
+  </nav>
+
+  <div id="authForms">
+    <form id="loginForm" class="hidden">
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" id="loginPassword" placeholder="Senha" required />
+      <button type="submit">Entrar</button>
+    </form>
+
+    <form id="registerForm" class="hidden">
+      <input type="email" id="registerEmail" placeholder="Email" required />
+      <input type="password" id="registerPassword" placeholder="Senha" required />
+      <button type="submit">Cadastrar</button>
+    </form>
+  </div>
+
+  <input type="text" id="inputUserName" placeholder="Digite o nome que quer que apareça" />
+
+  <button id="clickButton" disabled>Clique aqui!</button>
+
+  <!-- Campo visível só para admin -->
+  <div id="adminScheduleContainer" class="hidden">
+    <label for="adminSchedule">Defina data e horário para liberar o desafio:</label>
+    <input type="datetime-local" id="adminSchedule" />
+  </div>
+
+  <h2>Ranking</h2>
+  <ol id="rankingList"></ol>
+
+  <button id="btnDeleteRanking" class="hidden">Apagar Ranking</button>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Config Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDYsjGrcvRh-UquqfutgdnBV0UNnLt7l8w",
+      authDomain: "rankingcliques.firebaseapp.com",
+      projectId: "rankingcliques",
+      storageBucket: "rankingcliques.firebasestorage.app",
+      messagingSenderId: "54623382752",
+      appId: "1:54623382752:web:e5b9eba03db9edad35b485"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Elementos
+    const statusEl = document.getElementById("status");
+    const clickButton = document.getElementById("clickButton");
+    const rankingList = document.getElementById("rankingList");
+    const inputUserName = document.getElementById("inputUserName");
+
+    const btnShowLogin = document.getElementById("btnShowLogin");
+    const btnShowRegister = document.getElementById("btnShowRegister");
+    const btnLogout = document.getElementById("btnLogout");
+
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const userEmailSpan = document.getElementById("userEmail");
+
+    const btnDeleteRanking = document.getElementById("btnDeleteRanking");
+
+    const adminScheduleContainer = document.getElementById("adminScheduleContainer");
+    const adminScheduleInput = document.getElementById("adminSchedule");
+
+    // Variáveis globais
+    let clickCount = 0;
+    let challengeActive = false;
+    let currentUser = null;
+
+    // Função para formatar data/hora para exibição amigável
+    function formatDateTime(date) {
+      return date.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+    }
+
+    // Função para ativar o desafio se já passou a data/hora
+    function checkAndActivateChallenge() {
+      const scheduledStr = localStorage.getItem("challengeSchedule");
+      if (!scheduledStr) {
+        statusEl.textContent = "Desafio não agendado. Aguardando configuração do administrador.";
+        clickButton.disabled = true;
+        challengeActive = false;
+        return;
+      }
+      const scheduledDate = new Date(scheduledStr);
+      const now = new Date();
+
+      if (now >= scheduledDate) {
+        statusEl.textContent = "Botão ativo!";
+        clickButton.disabled = false;
+        challengeActive = true;
+      } else {
+        const diffMs = scheduledDate - now;
+        statusEl.textContent = `Desafio liberado em ${formatDateTime(scheduledDate)} (falta ${Math.ceil(diffMs / 1000)}s)`;
+        clickButton.disabled = true;
+        challengeActive = false;
+      }
+    }
+
+    // Atualiza status a cada 1s
+    setInterval(checkAndActivateChallenge, 1000);
+
+    // Mostrar/ocultar formulários de login/cadastro
+    btnShowLogin.addEventListener("click", () => {
+      loginForm.classList.remove("hidden");
+      registerForm.classList.add("hidden");
+    });
+
+    btnShowRegister.addEventListener("click", () => {
+      registerForm.classList.remove("hidden");
+      loginForm.classList.add("hidden");
+    });
+
+    // Logout
+    btnLogout.addEventListener("click", () => {
+      auth.signOut();
+    });
+
+    // Login
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          loginForm.reset();
+          loginForm.classList.add("hidden");
+        })
+        .catch(error => alert("Erro no login: " + error.message));
+    });
+
+    // Cadastro
+    registerForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("registerEmail").value;
+      const password = document.getElementById("registerPassword").value;
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          registerForm.reset();
+          registerForm.classList.add("hidden");
+        })
+        .catch(error => alert("Erro no cadastro: " + error.message));
+    });
+
+    // Monitorar estado do usuário
+    auth.onAuthStateChanged(user => {
+      currentUser = user;
+      if (user) {
+        userEmailSpan.textContent = user.email;
+        btnLogout.classList.remove("hidden");
+        btnShowLogin.classList.add("hidden");
+        btnShowRegister.classList.add("hidden");
+        loginForm.classList.add("hidden");
+        registerForm.classList.add("hidden");
+
+        // Exibir controles admin se o usuário for admin (exemplo: email admin@exemplo.com)
+        if (user.email === "felipemorenoulhoa@yahoo.com.br") {
+          btnDeleteRanking.classList.remove("hidden");
+          adminScheduleContainer.classList.remove("hidden");
+
+          // Carregar horário salvo no localStorage para admin
+          const savedSchedule = localStorage.getItem("challengeSchedule");
+          if (savedSchedule) {
+            adminScheduleInput.value = savedSchedule.substring(0, 16); // format YYYY-MM-DDTHH:mm
+          }
+        } else {
+          btnDeleteRanking.classList.add("hidden");
+          adminScheduleContainer.classList.add("hidden");
+        }
+      } else {
+        userEmailSpan.textContent = "";
+        btnLogout.classList.add("hidden");
+        btnShowLogin.classList.remove("hidden");
+        btnShowRegister.classList.remove("hidden");
+        btnDeleteRanking.classList.add("hidden");
+        adminScheduleContainer.classList.add("hidden");
+      }
+    });
+
+    // Botão do desafio clicado
+    clickButton.addEventListener("click", () => {
+      if (!challengeActive) return;
+
+      const userName = inputUserName.value.trim() || "Anônimo";
+      clickCount++;
+
+      // Salvar no Firestore
+      db.collection("ranking").add({
+        nome: userName,
+        cliques: clickCount,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => {
+        alert("Clique registrado para " + userName + "! Total: " + clickCount);
+        inputUserName.value = "";
+        clickCount = 0;
+      }).catch(err => alert("Erro ao registrar clique: " + err));
+    });
+
+    // Carregar ranking do Firestore
+    function loadRanking() {
+      rankingList.innerHTML = "";
+      db.collection("ranking")
+        .orderBy("cliques", "desc")
+        .limit(10)
+        .get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const li = document.createElement("li");
+            li.textContent = `${data.nome} - ${data.cliques} cliques`;
+            rankingList.appendChild(li);
+          });
+        }).catch(err => console.error(err));
+    }
+
+    // Atualizar ranking periodicamente
+    setInterval(loadRanking, 5000);
+    loadRanking();
+
+    // Apagar ranking (apenas admin)
+    btnDeleteRanking.addEventListener("click", () => {
+      if (!confirm("Tem certeza que deseja apagar todo o ranking?")) return;
+
+      // Apagar todos documentos da coleção "ranking"
+      db.collection("ranking").get().then(snapshot => {
+        const batch = db.batch();
+        snapshot.forEach(doc => {
+          batch.delete(doc.ref);
+        });
+        return batch.commit();
+      }).then(() => {
+        alert("Ranking apagado!");
+        loadRanking();
+      }).catch(err => alert("Erro ao apagar ranking: " + err));
+    });
+
+    // Salvar horário definido pelo admin
+    adminScheduleInput.addEventListener("change", () => {
+      const dt = adminScheduleInput.value;
+      if (dt) {
+        localStorage.setItem("challengeSchedule", dt);
+        alert("Data e hora do desafio atualizadas para " + dt);
+      }
+    });
+  </script>
+</body>
+</html>
